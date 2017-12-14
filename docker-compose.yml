@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:3-alpine
+    environment:
+      TERM: linux
+    networks:
+      - internal
+    restart: unless-stopped
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE:      homestead
+      MYSQL_USER:          homestead
+      MYSQL_PASSWORD:      secret
+      TERM:                linux
+    networks:
+      - internal
+    restart: unless-stopped
+
+  dbadmin:
+    image: adminer
+    depends_on:
+      - db
+    networks:
+      - internal
+    restart: unless-stopped
+
+  app:
+    build: ./example-laravel
+    environment:
+      TERM: linux
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./laravel:/app
+    networks:
+      - internal
+    restart: unless-stopped
+
+  gateway:
+    image: nginx:stable-alpine
+    environment:
+      TERM: linux
+    volumes:
+      - ./example-laravel/proxy.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - internal
+      - external
+    ports:
+      - "80:80"     # application
+      - "8080:8080" # database admin
+    depends_on:
+      - app
+      - dbadmin
+    restart: unless-stopped
+
+networks:
+  external:
+    driver: bridge
+  internal:
+    driver: bridge
