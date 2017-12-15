@@ -1,8 +1,9 @@
 # User specific & automatically generated files #
 #################################################
-laravel
 .docker
 *.log
+laravel
+setup-example.sh
 
 # IDE and editor specific files #
 #################################

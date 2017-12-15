@@ -30,14 +30,14 @@ services:
     restart: unless-stopped
 
   app:
-    build: ./example-laravel
+    build: .
     environment:
       TERM: linux
     depends_on:
       - db
       - redis
     volumes:
-      - ./laravel:/app
+      - .:/app
     networks:
       - internal
     restart: unless-stopped

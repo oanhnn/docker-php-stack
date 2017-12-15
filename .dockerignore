@@ -5,7 +5,7 @@
 .gitignore
 .travis.yml
 example-laravel
-docker-compose.yml
+laravel
 Dockerfile
 LICENSE
 README.md

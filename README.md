@@ -75,7 +75,7 @@ stdout_logfile=/var/log/supervisord/laravel-horizon.log
 > `laravel-wokers.ini` only use when your application dosen't install Laravel Horizon
 
 ```ini
-;; laravel-workers
+;; laravel-workers.ini
 ;; https://laravel.com/docs/5.5/queues#supervisor-configuration
 [program:laravel-worker]
 process_name=%(program_name)s_%(process_num)02d
