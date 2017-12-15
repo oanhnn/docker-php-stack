@@ -15,7 +15,7 @@ RUN echo ">>> Install nodejs, npm, yarn and laravel-echo-server" \
  && yarn cache clean \
  && rm -rf /tmp/* /var/cache/apk/* \
  && echo ">>> Setting crond for laravel scheduler" \
- && echo -e "*\t*\t*\t*\t*\tphp /path/to/artisan schedule:run > /dev/null 2>&1" | crontab -u www-data -
+ && echo -e "*\t*\t*\t*\t*\tphp /app/artisan schedule:run > /dev/null 2>&1" | crontab -u www-data -
 
 COPY laravel-echo.ini /etc/supervisor.d/laravel-echo.ini
 COPY laravel-horizon.ini /etc/supervisor.d/laravel-horizon.ini

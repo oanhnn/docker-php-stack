@@ -48,7 +48,7 @@ COPY laravel-horizon.ini /etc/supervisor.d/laravel-horizon.ini
 [program:laravel-echo]
 process_name=%(program_name)s
 directory=/app
-command=/usr/bin/laravel-echo-server start
+command=/usr/local/bin/laravel-echo-server start
 autostart=true
 autorestart=true
 user=www-data
@@ -78,7 +78,7 @@ stdout_logfile=/var/log/supervisord/laravel-horizon.log
 ;; laravel-workers.ini
 ;; https://laravel.com/docs/5.5/queues#supervisor-configuration
 [program:laravel-worker]
-process_name=%(program_name)s_%(process_num)02d
+process_name=worker_%(process_num)02d
 directory=/app
 command=php artisan queue:work redis --sleep=3 --tries=3 --queue=events,notifications,default
 autostart=true
