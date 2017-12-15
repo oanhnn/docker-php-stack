@@ -20,3 +20,5 @@ RUN echo ">>> Install nodejs, npm, yarn and laravel-echo-server" \
 COPY laravel-echo.ini /etc/supervisor.d/laravel-echo.ini
 COPY laravel-horizon.ini /etc/supervisor.d/laravel-horizon.ini
 #COPY laravel-workers.ini /etc/supervisor.d/laravel-workers.ini
+
+EXPOSE 80 6001

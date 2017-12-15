@@ -6,7 +6,7 @@
 .travis.yml
 docker-compose.yml
 Dockerfile
-laravel
+laravel-echo-server.json
 proxy.conf
 LICENSE
 README.md
