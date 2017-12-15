@@ -39,9 +39,9 @@ script:
   - cp example-laravel/* example-laravel/.dockerignore laravel/
   - cd laravel
   - if [ "$USE_LARAVEL_HORIZON" -eq "1" ]; then
-      composer require laravel/horizon
+      composer require laravel/horizon;
     else
-      sed -i "s|horizon.ini|workers.ini|gi" Dockerfile
+      sed -i "s|horizon.ini|workers.ini|gi" Dockerfile;
     fi
   - sed -i "s|DB_CONNECTION=.*|DB_CONNECTION=mysql|i"   .env
   - sed -i "s|DB_HOST=.*|DB_HOST=db|i"                  .env

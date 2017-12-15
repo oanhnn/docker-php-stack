@@ -47,7 +47,7 @@ services:
     environment:
       TERM: linux
     volumes:
-      - ./example-laravel/proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./proxy.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - internal
       - external
