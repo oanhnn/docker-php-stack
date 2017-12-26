@@ -1,5 +1,7 @@
 # oanhnn/docker-php-stack
 
+[![Build Status](https://travis-ci.org/oanhnn/docker-php-stack.svg?branch=master)](https://travis-ci.org/oanhnn/docker-php-stack)
+
 Repository of `oanhnn/php-stack` Docker image.
 
 ## Features
@@ -11,7 +13,7 @@ Repository of `oanhnn/php-stack` Docker image.
 - [x] Install curl
 
 ## Requirement
-- Docker Engine 1.12+
+- Docker Engine 1.13+
 
 ## Usage
 

@@ -81,13 +81,10 @@ COPY supervisor.d /etc/supervisor.d
 ## Get composer
 ONBUILD RUN curl -s https://getcomposer.org/installer | php \
  && mv composer.phar /usr/local/bin/composer \
- && chmod a+x /usr/local/bin/composer \
- && echo -e "*\t*\t*\t*\t*\tphp /app/artisan schedule:run > /dev/null 2>&1" | crontab -u www-data -
+ && chmod a+x /usr/local/bin/composer
 
 WORKDIR /app
 
 EXPOSE 80
 
 CMD ["supervisord", "--configuration", "/etc/supervisord.conf"]
-
-RUN echo -e "*\t*\t*\t*\t*\tphp /app/artisan schedule:run > /dev/null 2>&1" | crontab -u www-data -
