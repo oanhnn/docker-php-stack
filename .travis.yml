@@ -28,10 +28,6 @@ before_script:
   - docker-compose --version
 
 script:
-  - ls -la .
-  - ls -la ./scripts/
-  - sudo chmod a+x ./scripts/*
-
   # Build image oanhnn/php-stack
   - ./scripts/build.sh
 
