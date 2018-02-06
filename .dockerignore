@@ -1,15 +1,15 @@
 # User specific & automatically generated files #
 #################################################
-.docker
-.git
-.gitignore
-.travis.yml
-example-laravel
-laravel
-Dockerfile
-LICENSE
-README.md
-*.log
+/.docker
+/.git
+/.gitignore
+/.travis.yml
+/example-laravel
+/laravel
+/Dockerfile
+/LICENSE
+/README.md
+/*.log
 
 # IDE and editor specific files #
 #################################

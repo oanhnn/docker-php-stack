@@ -71,17 +71,18 @@ RUN echo ">>> Install dependencies" \
  && mkdir -p /etc/supervisor.d /var/log/supervisord \
  && sed -i "s|;*nodaemon=.*|nodaemon=true|i" /etc/supervisord.conf \
  && sed -i "s|;*pidfile=.*|pidfile=/run/supervisord.pid|i" /etc/supervisord.conf \
- && sed -i "s|;*childlogdir=.*|childlogdir=/var/log/supervisord|i" /etc/supervisord.conf
+ && sed -i "s|;*childlogdir=.*|childlogdir=/var/log/supervisord|i" /etc/supervisord.conf \
+ && echo ">>> Install composer" \
+ && curl -s https://getcomposer.org/installer | php \
+ && mv composer.phar /usr/local/bin/composer \
+ && chmod a+x /usr/local/bin/composer
 
 # Copy config files
 COPY php-fpm.conf /etc/php/php-fpm.conf
 COPY vhost.conf   /etc/nginx/conf.d/default.conf
 COPY supervisor.d /etc/supervisor.d
 
-## Get composer
-ONBUILD RUN curl -s https://getcomposer.org/installer | php \
- && mv composer.phar /usr/local/bin/composer \
- && chmod a+x /usr/local/bin/composer
+VOLUME /app /var/log
 
 WORKDIR /app
 
