@@ -29,10 +29,10 @@ before_script:
 
 script:
   # Build image oanhnn/php-stack
-  - scripts/build
+  - scripts/build.sh
 
   # Test with Laravel example
-  - scripts/test
+  - scripts/test.sh
 
 deploy:
   provider: script
