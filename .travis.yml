@@ -29,42 +29,14 @@ before_script:
 
 script:
   # Build image oanhnn/php-stack
-  - docker build -t oanhnn/php-stack:build .
+  - scripts/build
 
-  # Build images for example with Laravel
-  - composer create-project --no-dev --prefer-dist laravel/laravel ./laravel 5.5.*
-  - cp example-laravel/* example-laravel/.dockerignore laravel/
-  - cd laravel
-  - composer require predis/predis ~1.0
-  - if [ "$USE_LARAVEL_HORIZON" -eq "1" ]; then
-      composer require laravel/horizon;
-    else
-      sed -i "s|horizon.ini|workers.ini|gi" Dockerfile;
-    fi
-  - sed -i "s|DB_CONNECTION=.*|DB_CONNECTION=mysql|i"   .env
-  - sed -i "s|DB_HOST=.*|DB_HOST=db|i"                  .env
-  - sed -i "s|CACHE_DRIVER=.*|CACHE_DRIVER=redis|i"     .env
-  - sed -i "s|SESSION_DRIVER=.*|SESSION_DRIVER=redis|i" .env
-  - sed -i "s|MAIL_DRIVER=.*|MAIL_DRIVER=log|i"         .env
-  - sed -i "s|REDIS_HOST=.*|REDIS_HOST=redis|i"         .env
-  - docker-compose build
-  - docker-compose up -d
+  # Test with Laravel example
+  - scripts/test
 
-  # Verifications
-  - sleep 30
-  - docker-compose ps
-  - docker-compose logs
-  - curl --retry 10 --retry-delay 5 -I http://127.0.0.1:80/
-  - curl --retry 10 --retry-delay 5 -I http://127.0.0.1:80/socket.io/socket.io.js
-  - curl --retry 10 --retry-delay 5 -I http://127.0.0.1:8080/
-
-after_success:
-  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-  - if [[ ! -z "$TRAVIS_TAG" ]]; then
-      docker tag oanhnn/php-stack:build oanhnn/php-stack:$TRAVIS_TAG;
-      docker push oanhnn/php-stack:$TRAVIS_TAG;
-    fi
-  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_BRANCH" == "master" ]]; then
-      docker tag oanhnn/php-stack:build oanhnn/php-stack:latest;
-      docker push oanhnn/php-stack:latest;
-    fi
+deploy:
+  provider: script
+  script: scripts/deploy.sh
+  on:
+    branch: master
+    tags: true

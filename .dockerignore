@@ -9,6 +9,7 @@
 /Dockerfile
 /LICENSE
 /README.md
+/scripts
 /*.log
 
 # IDE and editor specific files #

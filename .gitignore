@@ -3,7 +3,6 @@
 /.docker
 /*.log
 /laravel
-/setup-example.sh
 
 # IDE and editor specific files #
 #################################
