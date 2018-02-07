@@ -1,5 +1,5 @@
 dist: trusty
-sudo: required
+sudo: false
 
 language: php
 php:
@@ -36,13 +36,3 @@ script:
 
   # Test with Laravel example
   - ./scripts/test.sh
-
-deploy:
-  - provider: script
-    script: ./scripts/deploy.sh
-    on:
-      branch: master
-  - provider: script
-    script: ./scripts/deploy.sh
-    on:
-      tags: true
