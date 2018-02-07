@@ -1,10 +1,13 @@
+dist: trusty
+sudo: required
+
 language: php
 php:
   - '7.1'
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.14.0
+    - DOCKER_COMPOSE_VERSION=1.18.0
   matrix:
     - USE_LARAVEL_HORIZON=1
     - USE_LARAVEL_HORIZON=0
@@ -35,8 +38,11 @@ script:
   - ./scripts/test.sh
 
 deploy:
-  provider: script
-  script: ./scripts/deploy.sh
-  on:
-    branch: master
-    tags: true
+  - provider: script
+    script: ./scripts/deploy.sh
+    on:
+      branch: master
+  - provider: script
+    script: ./scripts/deploy.sh
+    on:
+      tags: true
