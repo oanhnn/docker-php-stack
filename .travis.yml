@@ -36,3 +36,9 @@ script:
 
   # Test with Laravel example
   - ./scripts/test.sh
+
+deploy:
+  provider: script
+  script: ./scripts/deploy.sh
+  on:
+    branch: master

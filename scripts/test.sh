@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 
+mkdir laravel
+
 # Create Laravel project
-composer create-project --no-dev --prefer-dist laravel/laravel ./laravel 5.5.*
+docker run --rm -v $(pwd)/laravel:/app -v ~/.ssh:/root/.ssh oanhnn/php-stack:build create-project --no-dev --prefer-dist laravel/laravel . 5.5.*
 
 # Set up docker-compose
 cp example-laravel/* example-laravel/.dockerignore laravel/
 
-cd laravel
-composer require predis/predis ~1.0
+docker run --rm -v $(pwd)/laravel:/app -v ~/.ssh:/root/.ssh oanhnn/php-stack:build require predis/predis ~1.0
 
 # Setup Laravel Horizon or workers
 if [ "$USE_LARAVEL_HORIZON" -eq "1" ]; then
-  composer require laravel/horizon;
+  docker run --rm -v $(pwd)/laravel:/app -v ~/.ssh:/root/.ssh oanhnn/php-stack:build require laravel/horizon
 else
-  sed -i "s|horizon.ini|workers.ini|gi" Dockerfile;
+  sed -i "s|horizon.ini|workers.ini|gi" laravel/Dockerfile
 fi
+
+cd laravel
 
 # Setup environment variables
 sed -i "s|DB_CONNECTION=.*|DB_CONNECTION=mysql|i"   .env
