@@ -1,6 +1,16 @@
 FROM alpine:3.7
 
-LABEL maintainer="OanhNguyen <oanhnn.bk@gmail.com>"
+ARG BUILD_DATE
+ARG VCS_REF
+ARG STACK_VERSION=latest
+
+LABEL maintainer="OanhNguyen <oanhnn.bk@gmail.com>" \
+      org.label-schema.build-date=${BUILD_DATE} \
+	  org.label-schema.vcs-url="https://github.com/oanhnn/docker-php-stack.git" \
+	  org.label-schema.vcs-ref=${VCS_REF} \
+	  org.label-schema.schema-version=${STACK_VERION}
+	  org.label-schema.version=${VCS_REF} \
+	  org.label-schema.description="A PHP stack based alpine image"
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8" \
@@ -11,6 +21,7 @@ ENV LANG="en_US.UTF-8" \
 RUN apk add --update \
     ca-certificates \
     curl \
+    git \
     nginx \
     openssl \
     php7 \
@@ -43,6 +54,7 @@ RUN apk add --update \
     php7-soap \
     php7-tokenizer \
     php7-xdebug \
+    php7-xmlreader \
     php7-xmlwriter \
     php7-xml \
     php7-zip \
@@ -52,10 +64,10 @@ RUN apk add --update \
 
 ### Install dockerize
 ### See https://github.com/jwilder/dockerize
-ENV DOCKERIZE_VERSION="v0.6.0"
-RUN wget https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
- && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
- && rm dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz
+ARG DOCKERIZE_VERSION=0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/v${DOCKERIZE_VERSION}/dockerize-alpine-linux-amd64-v${DOCKERIZE_VERSION}.tar.gz \
+ && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-v${DOCKERIZE_VERSION}.tar.gz \
+ && rm dockerize-alpine-linux-amd64-v${DOCKERIZE_VERSION}.tar.gz
 
 ### Install composer
 ### See https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
@@ -71,10 +83,11 @@ RUN egrep -i "^www-data" /etc/group  || addgroup -g 82 -S www-data \
  && echo "<?php phpinfo();" > /app/public/index.php \
  && chown -R www-data:www-data /app \
 
-#RUN ln -nfs /usr/bin/php7 /usr/bin/php \
-# && ln -nfs /usr/sbin/php-fpm7 /usr/sbin/php-fpm \
-# && ln -nfs /etc/php7 /etc/php \
-# && mkdir -p /var/log/php7
+### Make php bin alias
+RUN ln -nfs /usr/bin/php7 /usr/bin/php \
+ && ln -nfs /usr/sbin/php-fpm7 /usr/sbin/php-fpm \
+ && ln -nfs /etc/php7 /etc/php \
+ && mkdir -p /var/log/php7
 
 ### Setting up for PHP
 ENV PHP_MEMORY_LIMIT="512M" \
@@ -108,5 +121,6 @@ EXPOSE 80
 CMD dockerize \
     -stdout /var/log/nginx/access.log \
     -stderr /var/log/nginx/error.log \
+    -stdout /var/log/php7/fpm-access.log \
     -stderr /var/log/php7/fpm-error.log \
     supervisord -c /etc/supervisord.conf

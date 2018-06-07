@@ -2,6 +2,7 @@
 #################################################
 /.docker
 /.git
+/.gitattributes
 /.gitignore
 /.travis.yml
 /example-laravel

@@ -7,7 +7,8 @@ php:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.18.0
+    - DOCKER_COMPOSE_VERSION=1.21.2
+    - DOCKER_REPO="oanhnn/php-stack"
   matrix:
     - USE_LARAVEL_HORIZON=1
     - USE_LARAVEL_HORIZON=0
@@ -29,6 +30,8 @@ before_script:
   # Check docker & docker-compose versions
   - docker --version
   - docker-compose --version
+  - export BUILD_TAG=${TRAVIS_COMMIT::8}
+  - export BUILD_CONTAINER="php-stack-$BUILD_TAG"
 
 script:
   # Build image oanhnn/php-stack

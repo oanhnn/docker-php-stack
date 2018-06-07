@@ -13,7 +13,7 @@ Repository of `oanhnn/php-stack` Docker image.
 - [x] Install curl
 
 ## Requirement
-- Docker Engine 1.13+
+- Docker Engine & Docker Compose
 
 ## Usage
 
