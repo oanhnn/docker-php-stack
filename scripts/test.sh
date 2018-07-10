@@ -19,14 +19,14 @@ sed -i "s|MAIL_DRIVER=.*|MAIL_DRIVER=log|i"         .env
 sed -i "s|REDIS_HOST=.*|REDIS_HOST=redis|i"         .env
 
 # Build images for example with Laravel
-docker-compose build
+docker-compose build app
 
-docker-compose run app composer install
-docker-compose run app composer require predis/predis ~1.0
+docker-compose run --no-deps --rm app composer install --no-dev --prefer-dist
+docker-compose run --no-deps --rm app composer require predis/predis ~1.0
 
 # Setup Laravel Horizon or workers
 if [ "$USE_LARAVEL_HORIZON" -eq "1" ]; then
-  docker-compose run app composer require laravel/horizon
+  docker-compose run --no-deps --rm app composer require laravel/horizon
 else
   sed -i "s|horizon.ini|workers.ini|gi" laravel/Dockerfile
 fi
