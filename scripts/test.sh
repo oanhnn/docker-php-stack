@@ -3,16 +3,16 @@
 mkdir laravel
 
 # Create Laravel project
-docker run --rm -v $(pwd)/laravel:/app -v ~/.ssh:/root/.ssh oanhnn/php-stack:build create-project --no-dev --prefer-dist laravel/laravel . 5.5.*
+docker run --rm -v $(pwd)/laravel:/app $DOCKER_REPO:latest composer create-project --no-dev --prefer-dist laravel/laravel . 5.5.*
 
 # Set up docker-compose
 cp example-laravel/* example-laravel/.dockerignore laravel/
 
-docker run --rm -v $(pwd)/laravel:/app -v ~/.ssh:/root/.ssh oanhnn/php-stack:build require predis/predis ~1.0
+docker run --rm -v $(pwd)/laravel:/app $DOCKER_REPO:latest composer require predis/predis ~1.0
 
 # Setup Laravel Horizon or workers
 if [ "$USE_LARAVEL_HORIZON" -eq "1" ]; then
-  docker run --rm -v $(pwd)/laravel:/app -v ~/.ssh:/root/.ssh oanhnn/php-stack:build require laravel/horizon
+  docker run --rm -v $(pwd)/laravel:/app $DOCKER_REPO:latest composer require laravel/horizon
 else
   sed -i "s|horizon.ini|workers.ini|gi" laravel/Dockerfile
 fi

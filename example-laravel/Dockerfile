@@ -1,6 +1,13 @@
 # Image oanhnn/php-stack:build only be used for test build image with travis
 # Please use image oanhnn/php-stack:latest in your project
-FROM oanhnn/php-stack:build
+FROM oanhnn/php-stack
+
+### Install composer
+### See https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN curl -s https://getcomposer.org/installer | php \
+ && mv composer.phar /usr/local/bin/composer \
+ && chmod a+x /usr/local/bin/composer
 
 RUN echo ">>> Install nodejs, npm, yarn and laravel-echo-server" \
  && apk add --update \
