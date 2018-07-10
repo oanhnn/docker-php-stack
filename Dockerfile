@@ -91,10 +91,8 @@ COPY php-fpm.conf /etc/php/php-fpm.conf
 COPY vhost.conf   /etc/nginx/conf.d/default.conf
 COPY supervisor.d /etc/supervisor.d
 
-VOLUME /app /var/log
-
+VOLUME /app
 WORKDIR /app
-
 EXPOSE 80
 
 CMD supervisord -n -c /etc/supervisord.conf

@@ -42,7 +42,7 @@ services:
       - internal
     restart: unless-stopped
 
-  gateway:
+  proxy:
     image: nginx:stable-alpine
     environment:
       TERM: linux
