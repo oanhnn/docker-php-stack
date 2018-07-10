@@ -3,7 +3,7 @@
 mkdir laravel
 
 # Create Laravel project
-composer create-project --no-dev --prefer-dist laravel/laravel . 5.5.*
+composer create-project --no-dev --prefer-dist laravel/laravel laravel 5.5.*
 
 # Set up docker-compose
 cp example-laravel/* example-laravel/.dockerignore laravel/
