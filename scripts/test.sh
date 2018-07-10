@@ -6,6 +6,7 @@ mkdir laravel
 composer create-project --no-dev --prefer-dist laravel/laravel laravel 5.5.*
 
 # Set up docker-compose
+sudo chown `id -u`:`id -g` -R laravel/
 cp example-laravel/* example-laravel/.dockerignore laravel/
 cd laravel
 rm -rf composer.lock vendor
