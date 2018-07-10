@@ -52,8 +52,8 @@ services:
       - internal
       - external
     ports:
-      - "80:80"     # application
-      - "8080:8080" # database admin
+      - "81:80"     # application
+      - "82:8080"   # database admin
     depends_on:
       - app
       - dbadmin

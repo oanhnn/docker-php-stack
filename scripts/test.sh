@@ -3,7 +3,7 @@
 mkdir laravel
 
 # Create Laravel project
-composer create-project --no-dev --prefer-dist laravel/laravel laravel 5.5.*
+docker run --rm -v $(pwd):/app composer create-project --no-dev --prefer-dist laravel/laravel laravel 5.5.*
 
 # Set up docker-compose
 sudo chown `id -u`:`id -g` -R laravel/
@@ -23,11 +23,11 @@ sed -i "s|REDIS_HOST=.*|REDIS_HOST=redis|i"         .env
 docker-compose build app
 
 docker-compose run --no-deps --rm app composer install --no-dev --prefer-dist
-docker-compose run --no-deps --rm app composer require predis/predis ~1.0
+docker-compose run --no-deps --rm app composer require --update-no-dev predis/predis ~1.0
 
 # Setup Laravel Horizon or workers
 if [ "$USE_LARAVEL_HORIZON" -eq "1" ]; then
-  docker-compose run --no-deps --rm app composer require laravel/horizon
+  docker-compose run --no-deps --rm app composer require --update-no-dev laravel/horizon
 else
   sed -i "s|horizon.ini|workers.ini|gi" laravel/Dockerfile
 fi
@@ -35,12 +35,12 @@ fi
 docker-compose up -d
 
 # Verifications
-sleep 30
+sleep 60
 docker-compose ps
 docker-compose logs
 
 cd ..
 
-curl --retry 10 --retry-delay 5 -I http://127.0.0.1:80/
-curl --retry 10 --retry-delay 5 -I http://127.0.0.1:80/socket.io/socket.io.js
-curl --retry 10 --retry-delay 5 -I http://127.0.0.1:8080/
+curl --retry 10 --retry-delay 5 -I http://127.0.0.1:81/
+curl --retry 10 --retry-delay 5 -I http://127.0.0.1:81/socket.io/socket.io.js
+curl --retry 10 --retry-delay 5 -I http://127.0.0.1:82/
