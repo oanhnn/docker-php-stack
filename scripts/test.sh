@@ -22,7 +22,7 @@ sed -i "s|REDIS_HOST=.*|REDIS_HOST=redis|i"         .env
 # Build images for example with Laravel
 docker-compose build app
 
-docker-compose run --no-deps --rm app composer install --no-dev --prefer-dist
+docker-compose run --no-deps --rm app composer install --no-dev --no-interaction --no-progress --no-suggest --prefer-dist
 docker-compose run --no-deps --rm app composer require --update-no-dev predis/predis ~1.0
 
 # Setup Laravel Horizon or workers
