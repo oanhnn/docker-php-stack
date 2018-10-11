@@ -51,8 +51,9 @@ RUN apk add --update \
  && rm -rf /tmp/* /var/cache/apk/*
 
 ### Ensure www-data (ID: 82) user and make webroot directory
-RUN egrep -i "^www-data" /etc/group  || addgroup -g 82 -S www-data \
- && egrep -i "^www-data" /etc/passwd || adduser -u 82 -D -S -G www-data www-data \
+RUN set -x \
+ && addgroup -g 82 -S www-data \
+ && adduser -u 82 -D -S -G www-data www-data \
  && mkdir -p /app/public \
  && echo "<?php phpinfo();" > /app/public/index.php \
  && chown -R www-data:www-data /app
@@ -76,9 +77,9 @@ RUN sed -i "s|;*date.timezone =.*|date.timezone=${TIMEZONE}|i" /etc/php/php.ini 
  && sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo=0|i" /etc/php/php.ini \
  && sed -i "s|;*expose_php=.*|expose_php=0|i" /etc/php/php.ini
 
-### Setting nginx
-RUN sed -i "s|error_log\s.*|error_log stderr warn;|i" /etc/nginx/nginx.conf \
- && sed -i "s|\s*access_log\s.*|access_log /dev/stdout main;|i" /etc/nginx/nginx.conf
+### Forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+ && ln -sf /dev/stderr /var/log/nginx/error.log
 
 ### Setting supervisord
 RUN mkdir -p /etc/supervisor.d /var/log/supervisord \
