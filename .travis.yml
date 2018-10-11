@@ -1,9 +1,8 @@
-dist: trusty
-sudo: false
-
 language: php
-php:
-  - '7.1'
+
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 env:
   global:

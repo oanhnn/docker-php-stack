@@ -50,11 +50,12 @@ RUN apk add --update \
     supervisor \
  && rm -rf /tmp/* /var/cache/apk/*
 
-### Ensure www-data (ID: 82) user and make webroot directory
-RUN set -x \
- && addgroup -g 82 -S www-data \
- && adduser -u 82 -D -S -G www-data www-data \
- && mkdir -p /app/public \
+### Ensure www-data (ID: 82) user
+RUN egrep -i "^www-data" /etc/group  || addgroup -g 82 -S www-data
+RUN egrep -i "^www-data" /etc/passwd || adduser -u 82 -D -S -G www-data www-data
+
+### Make webroot directory
+RUN mkdir -p /app/public \
  && echo "<?php phpinfo();" > /app/public/index.php \
  && chown -R www-data:www-data /app
 
