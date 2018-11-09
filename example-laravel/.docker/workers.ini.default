@@ -2,11 +2,14 @@
 ;; https://laravel.com/docs/5.5/queues#supervisor-configuration
 [program:laravel-worker]
 process_name=worker_%(process_num)02d
-directory=/app
-command=php artisan queue:work redis --sleep=3 --tries=3 --queue=events,notifications,default
+directory=/var/www/html
+command=php artisan queue:work redis --sleep=3
 autostart=true
 autorestart=true
 user=www-data
 numprocs=5
-redirect_stderr=true
-stdout_logfile=/var/log/supervisord/laravel-worker.log
+redirect_stderr=false
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0

@@ -1,41 +1,51 @@
-# Image oanhnn/php-stack:build only be used for test build image with travis
-# Please use image oanhnn/php-stack:latest in your project
+#========================
+# Build backend source
+#========================
+FROM composer as vendor
+
+WORKDIR /var/www/html
+
+COPY composer.json composer.lock /var/www/html/
+RUN composer install  \
+    --ignore-platform-reqs \
+    --no-autoloader \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --no-suggest \
+    --no-scripts \
+    --prefer-dist
+
+COPY . /var/www/html/
+RUN composer dump-autoload --classmap-authoritative --no-dev --optimize
+
+##========================
+## Build frontend assets
+##========================
+#FROM node:10-alpine as frontend
+#
+#RUN mkdir -p /var/www/html/public/frontend
+#
+#COPY package.json package-lock.json webpack.mix.js /var/www/html/
+#COPY resources /var/www/html/resources
+#WORKDIR /var/www/html
+#
+#RUN yarn install
+#RUN npm run production
+
+#========================
+# Build app image
+#========================
 FROM oanhnn/php-stack:latest
 
-### Install composer
-### See https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
-ENV COMPOSER_ALLOW_SUPERUSER=1 \
-    COMPOSER_HOME=/root
-RUN curl -s https://getcomposer.org/installer | php \
- && mv composer.phar /usr/local/bin/composer \
- && chmod a+x /usr/local/bin/composer
+COPY --from=vendor /var/www/html /var/www/html
+#COPY --from=frontend /var/www/html/public /var/www/html/public
 
-### Install nodejs, npm, yarn
-RUN apk add --update --no-cache \
-    nodejs \
-    nodejs-npm yarn
+RUN chown -R www-data:www-data /var/www/html
 
-### Install laravel-echo-server
-RUN apk add --update --no-cache sqlite wget openssl \
- && apk add --update --no-cache --virtual .build-deps \
-        binutils-gold \
-        curl \
-        g++ \
-        gcc \
-        gnupg \
-        libgcc \
-        linux-headers \
-        make \
-        python \
- && yarn global add --prod --no-lockfile laravel-echo-server \
- && apk del .build-deps \
- && yarn cache clean
+COPY .docker/horizon.ini.default /etc/supervisor.d/horizon.ini.default
+COPY .docker/workers.ini.default /etc/supervisor.d/workers.ini.default
+COPY .docker/vhost.conf          /etc/nginx/conf.d/default.conf
 
-### Setting crond for laravel scheduler
-RUN echo -e "* * * * * php /app/artisan schedule:run > /dev/null 2>&1" | crontab -u www-data -
-
-COPY laravel-echo.ini /etc/supervisor.d/laravel-echo.ini
-COPY laravel-horizon.ini /etc/supervisor.d/laravel-horizon.ini
-#COPY laravel-workers.ini /etc/supervisor.d/laravel-workers.ini
-
-EXPOSE 80 6001
+COPY .docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+ENTRYPOINT ["docker-entrypoint"]

@@ -7,16 +7,17 @@
 /.travis.yml
 /example-laravel
 /laravel
+/scripts
 /Dockerfile
 /LICENSE
 /README.md
-/scripts
 /*.log
 
 # IDE and editor specific files #
 #################################
 /nbproject
 /.idea
+/.vscode
 
 # OS generated files #
 ######################

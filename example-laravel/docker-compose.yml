@@ -1,14 +1,30 @@
 version: "3"
 
+### Config networks driver ###
+networks:
+  external:
+    driver: ${EXTERNAL_NETWORKS_DRIVER:-bridge}
+  internal:
+    driver: ${INTERNAL_NETWORKS_DRIVER:-bridge}
+
+### Config volumes driver ###
+volumes:
+  mysql:
+    driver: ${VOLUMES_DRIVER:-local}
+  redis:
+    driver: ${VOLUMES_DRIVER:-local}
+
 services:
+  ### Redis server ###
   redis:
     image: redis:3-alpine
-    environment:
-      TERM: linux
     networks:
       - internal
     restart: unless-stopped
+    volumes:
+      - .docker/data/redis:/data
 
+  ### Mysql server ###
   db:
     image: mysql:5.7
     environment:
@@ -20,47 +36,66 @@ services:
     networks:
       - internal
     restart: unless-stopped
+    volumes:
+      - .docker/data/mysql:/var/lib/mysql
+      - .docker/initdb.d:/docker-entrypoint-initdb.d
 
-  dbadmin:
-    image: adminer
+  ### Pusher server ###
+  pusher:
+    image: oanhnn/laravel-echo-server:latest
     depends_on:
-      - db
+      - redis
+    environment:
+      LARAVEL_ECHO_SERVER_AUTH_HOST:  'http://app'
+      LARAVEL_ECHO_SERVER_HOST:       null
+      LARAVEL_ECHO_SERVER_PORT:       6001
+      LARAVEL_ECHO_SERVER_DEBUG:      'false'
+      REDIS_HOST:                     redis
+      REDIS_PORT:                     6379
+      REDIS_DB_BACKEND:               0
     networks:
       - internal
     restart: unless-stopped
 
+  ### Application server ###
   app:
     build: .
-    environment:
-      TERM: linux
     depends_on:
       - db
       - redis
+    environment:
+      APP_ENABLE_CRONTAB: 1
+      APP_ENABLE_HORIZON: 1
+      APP_ENABLE_WORKERS: 0
+#      REDIS_HOST:         redis
+#      REDIS_PORT:         6379
+#      DB_CONNECTION:      mysql
+#      DB_HOST:            db
+#      DB_USERNAME:        homestead
+#      DB_PASSWORD:        secret
+#      DB_DATABASE:        homestead
+#      MAIL_DRIVER:        log
+#      QUEUE_CONNECTION:   redis
+#      SESSION_DRIVER:     redis
+#      CACHE_DRIVER:       redis
+#      BROADCAST_DRIVER:   redis
     volumes:
-      - .:/app
+      - .:/var/www/html
     networks:
       - internal
     restart: unless-stopped
 
+  ### Proxy server ###
   proxy:
     image: nginx:stable-alpine
-    environment:
-      TERM: linux
-    volumes:
-      - ./proxy.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+      - pusher
     networks:
       - internal
       - external
     ports:
-      - "81:80"     # application
-      - "82:8080"   # database admin
-    depends_on:
-      - app
-      - dbadmin
+      - "80:80"     # application
     restart: unless-stopped
-
-networks:
-  external:
-    driver: bridge
-  internal:
-    driver: bridge
+    volumes:
+      - .docker/proxy.conf:/etc/nginx/conf.d/default.conf:ro
