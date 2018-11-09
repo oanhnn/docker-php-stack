@@ -17,6 +17,7 @@ Repository of `oanhnn/php-stack` Docker image.
 - [x] Install curl
 
 ## Requirement
+
 - Docker Engine & Docker Compose
 
 ## Usage
@@ -24,13 +25,19 @@ Repository of `oanhnn/php-stack` Docker image.
 Example for a Laravel application
 
 1. Copy all file in `example-laravel` folder to your project root folder
+2. Uncomment this code in `docker-compose.yml` (line 82-83)
+   
+   ```yml
+   #    volumes:
+   #      - .:/var/www/html
+   ```
 
-2. Build and run
+3. Build and run
 
-```bash
-$ docker-compose build app
-$ docker-compose up -d
-```
+   ```bash
+   $ docker-compose build app
+   $ docker-compose up -d
+   ```
 
 ## Contributing
 
