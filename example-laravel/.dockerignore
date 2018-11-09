@@ -1,34 +1,35 @@
 # User specific & automatically generated files #
 #################################################
-/.git
+.git
 .gitignore
 .travis.yml
 
-/.docker/data
-/.docker/initdb.d
+.docker/data
+.docker/initdb.d
 docker-compose.yml
 Dockerfile
 
 /public/hot
 /public/storage
 /storage/*.key
-/vendor
 /.vagrant
 Homestead.json
 Homestead.yaml
+laravel-echo-server.json
 node_modules
 npm-debug.log
 yarn-error.log
 LICENSE
 README.md
-.env
 *.log
 
 # IDE and editor specific files #
 #################################
-/nbproject
-/.idea
-/.vscode
+nbproject
+.idea
+.phpstorm.meta.php
+.vscode
+_ide_helper.php
 
 # OS generated files #
 ######################
