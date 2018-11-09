@@ -10,7 +10,7 @@ ENV LANG="en_US.UTF-8" \
 RUN set -x \
  && addgroup -g 82 -S www-data \
  && adduser -u 82 -D -S -G www-data www-data \
- && mkdir -p /var/www/html/public \
+ && mkdir -p /var/www/html \
  && chown -R www-data:www-data /var/www/html/
 
 ### Install php
@@ -76,20 +76,15 @@ RUN sed -i "s|;*date.timezone =.*|date.timezone=${TIMEZONE}|i" /etc/php/php.ini 
  && sed -i "s|;*max_file_uploads =.*|max_file_uploads=${PHP_MAX_FILE_UPLOAD}|i" /etc/php/php.ini \
  && sed -i "s|;*post_max_size =.*|post_max_size=${PHP_POST_MAX_SIZE}|i" /etc/php/php.ini
 
-### Setting supervisord
-RUN mkdir -p /etc/supervisor.d /var/log/supervisord \
- && sed -i "s|;*nodaemon=.*|nodaemon=true|i" /etc/supervisord.conf \
- && sed -i "s|;*pidfile=.*|pidfile=/run/supervisord.pid|i" /etc/supervisord.conf \
- && sed -i "s|;*childlogdir=.*|childlogdir=/var/log/supervisord|i" /etc/supervisord.conf
-
 ### Forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
- && ln -sf /dev/stderr /var/log/nginx/error.log
+RUN ln -sf /dev/stdout  /var/log/nginx/access.log \
+ && ln -sf /dev/stderr  /var/log/nginx/error.log
 
 #### Copy config files
-COPY php-fpm.conf /etc/php/php-fpm.conf
-COPY vhost.conf   /etc/nginx/conf.d/default.conf
-COPY supervisor.d /etc/supervisor.d
+COPY php-fpm.conf       /etc/php/php-fpm.conf
+COPY vhost.conf         /etc/nginx/conf.d/default.conf
+COPY supervisord.conf   /etc/supervisord.conf
+COPY supervisor.d       /etc/supervisor.d
 
 VOLUME /var/www/html
 WORKDIR /var/www/html

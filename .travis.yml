@@ -1,4 +1,5 @@
 language: php
+php: 7.2
 
 cache:
   directories:
@@ -14,7 +15,7 @@ env:
     - APP_ENABLE_HORIZON=1 APP_ENABLE_WORKERS=0 LARAVEL=5.7.*
     - APP_ENABLE_HORIZON=0 APP_ENABLE_WORKERS=1 LARAVEL=5.5.*
     - APP_ENABLE_HORIZON=0 APP_ENABLE_WORKERS=1 LARAVEL=5.6.*
-    - APP_ENABLE_HORIZON=0 APP_ENABLE_WORKERS=1 LARAVEL=5.7.*
+    - APP_ENABLE_HORIZON=0 APP_ENABLE_WORKERS=1 LARAVEL=5.7.* DEPLOY=1
 
 install:
   - travis_retry composer self-update
@@ -47,4 +48,5 @@ deploy:
   provider: script
   script: ./scripts/deploy.sh
   on:
-    branch: master
+    all_branches: true
+    condition: "$DEPLOY = 1"

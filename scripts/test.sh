@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Note: In this test, i using native `composer` of TravisCI image for speed up test process
 # You can use `docker run --rm -v $(pwd):/app <subcommand>` if you don't install `composer` yet
@@ -10,11 +10,11 @@ composer create-project --no-dev --prefer-dist --ignore-platform-reqs laravel/la
 
 # Setting up project
 cd laravel
-composer require predis/predis --ignore-platform-reqs
+composer require predis/predis --ignore-platform-reqs --update-no-dev
 
 # Set up Laravel Horizon
 if [ "${APP_ENABLE_HORIZON}" -eq "1" ]; then
-  composer require laravel/horizon --ignore-platform-reqs
+  composer require laravel/horizon --ignore-platform-reqs --update-no-dev
 fi
 
 rm -rf vendor
@@ -28,8 +28,8 @@ sed -i "s|SESSION_DRIVER=.*|SESSION_DRIVER=redis|i" .env
 sed -i "s|MAIL_DRIVER=.*|MAIL_DRIVER=log|i"         .env
 
 # Set up docker-compose
-sudo chown `id -u`:`id -g` -R laravel/
-cp example-laravel/* example-laravel/.docker* laravel/
+sudo chown `id -u`:`id -g` -R ./
+cp -rT ../example-laravel .
 
 # Build and run
 docker-compose build app
@@ -38,10 +38,9 @@ docker-compose up -d
 # Verifications
 sleep 60
 docker-compose ps
-docker-compose logs
+docker-compose logs app
 
 cd ..
 
-curl --retry 10 --retry-delay 5 -I http://127.0.0.1:81/
-curl --retry 10 --retry-delay 5 -I http://127.0.0.1:81/socket.io/socket.io.js
-curl --retry 10 --retry-delay 5 -I http://127.0.0.1:82/
+curl --retry 10 --retry-delay 5 -I http://127.0.0.1/
+curl --retry 10 --retry-delay 5 -I http://127.0.0.1/socket.io/socket.io.js
