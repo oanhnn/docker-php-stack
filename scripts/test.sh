@@ -17,8 +17,6 @@ if [ "${APP_ENABLE_HORIZON}" -eq "1" ]; then
   composer require laravel/horizon --ignore-platform-reqs --update-no-dev
 fi
 
-rm -rf vendor
-
 # Setup environment variables
 sed -i "s|DB_CONNECTION=.*|DB_CONNECTION=mysql|i"   .env
 sed -i "s|DB_HOST=.*|DB_HOST=db|i"                  .env
