@@ -36,19 +36,9 @@ RUN composer dump-autoload --classmap-authoritative --no-dev --optimize
 #========================
 # Build app image
 #========================
-FROM oanhnn/php-stack:latest
+FROM oanhnn/php-stack:laravel
 
 COPY --from=vendor /var/www/html /var/www/html
 #COPY --from=frontend /var/www/html/public /var/www/html/public
 
 RUN chown -R www-data:www-data /var/www/html
-
-COPY .docker/horizon.ini.default /etc/supervisor.d/horizon.ini.default
-COPY .docker/workers.ini.default /etc/supervisor.d/workers.ini.default
-COPY .docker/vhost.conf          /etc/nginx/conf.d/default.conf
-COPY .docker/cronjobs.conf       /etc/www-data-cronjobs
-
-COPY .docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-ENTRYPOINT ["docker-entrypoint"]
-
-CMD supervisord -n -c /etc/supervisord.conf

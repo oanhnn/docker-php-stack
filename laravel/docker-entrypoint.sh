@@ -9,7 +9,7 @@ else
 fi
 
 # Enable Laravel schedule
-if [[ "${APP_ENABLE_CRONTAB:-0}" = "1" ]]; then
+if [[ "${APP_ENABLE_CRONTAB:-1}" = "1" ]]; then
     /bin/cp -f /etc/www-data-cronjobs /etc/crontabs/www-data
 else
     [[ -f /etc/crontabs/www-data ]] && rm -f /etc/crontabs/www-data

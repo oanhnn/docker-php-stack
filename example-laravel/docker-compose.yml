@@ -59,14 +59,14 @@ services:
 
   ### Application server ###
   app:
-    build: .
+    image: oanhnn/php-stack:laravel
     depends_on:
       - db
       - redis
     environment:
       APP_ENABLE_CRONTAB: 1
-      APP_ENABLE_HORIZON: 1
-      APP_ENABLE_WORKERS: 0
+#      APP_ENABLE_HORIZON: 1
+#      APP_ENABLE_WORKERS: 0
 #      REDIS_HOST:         redis
 #      REDIS_PORT:         6379
 #      DB_CONNECTION:      mysql
@@ -79,8 +79,8 @@ services:
 #      SESSION_DRIVER:     redis
 #      CACHE_DRIVER:       redis
 #      BROADCAST_DRIVER:   redis
-#    volumes:
-#      - .:/var/www/html
+    volumes:
+      - .:/var/www/html
     networks:
       - internal
     restart: unless-stopped

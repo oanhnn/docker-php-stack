@@ -25,12 +25,16 @@ Repository of `oanhnn/php-stack` Docker image.
 Example for a Laravel application
 
 1. Copy all file in `example-laravel` folder to your project root folder
-2. Uncomment this code in `docker-compose.yml` (line 82-83)
-   
-   ```yml
-   #    volumes:
-   #      - .:/var/www/html
-   ```
+
+2. *Optional*: Use test image for production
+
+   - Replace line: `image: oanhnn/php-stack:laravel` by `build: .`  in `docker-compose.yml` (line 62)
+   - Comment mount volumes of `app` service in `docker-compose.yml` (line 82-83)
+
+      ```yml
+      #    volumes:
+      #      - .:/var/www/html
+      ```
 
 3. Build and run
 

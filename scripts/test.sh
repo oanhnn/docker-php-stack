@@ -3,13 +3,13 @@
 # Note: In this test, i using native `composer` of TravisCI image for speed up test process
 # You can use `docker run --rm -v $(pwd):/app <subcommand>` if you don't install `composer` yet
 
-mkdir laravel
+mkdir test-app
 
 # Create Laravel project
-composer create-project --no-dev --prefer-dist --ignore-platform-reqs laravel/laravel laravel $LARAVEL
+composer create-project --no-dev --prefer-dist --ignore-platform-reqs laravel/laravel test-app $LARAVEL
 
 # Setting up project
-cd laravel
+cd test-app
 composer require predis/predis --ignore-platform-reqs --update-no-dev
 
 # Set up Laravel Horizon
@@ -32,7 +32,6 @@ sudo chown `id -u`:`id -g` -R ./
 cp -rT ../example-laravel .
 
 # Build and run
-docker-compose build app
 docker-compose up -d
 
 # Verifications

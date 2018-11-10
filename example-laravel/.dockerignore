@@ -3,9 +3,7 @@
 .git
 .gitignore
 .travis.yml
-
-.docker/data
-.docker/initdb.d
+.docker
 docker-compose.yml
 Dockerfile
 
