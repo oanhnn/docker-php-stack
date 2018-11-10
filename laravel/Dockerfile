@@ -31,7 +31,7 @@ COPY workers.ini.default /etc/supervisor.d/workers.ini.default
 COPY vhost.conf          /etc/nginx/conf.d/default.conf
 COPY cronjobs.conf       /etc/www-data-cronjobs
 
-COPY .docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["docker-entrypoint"]
 
 CMD supervisord -n -c /etc/supervisord.conf
